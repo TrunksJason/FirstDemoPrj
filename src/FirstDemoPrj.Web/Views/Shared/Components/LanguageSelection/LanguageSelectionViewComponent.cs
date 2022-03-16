@@ -22,7 +22,7 @@ namespace FirstDemoPrj.Web.Views.Shared.Components.LanguageSelection
                 CurrentUrl = Request.Path
             };
 
-            return await Task.FromResult(View(model));
+            return await System.Threading.Tasks.Task.FromResult(View(model));
         }
     }
 }
