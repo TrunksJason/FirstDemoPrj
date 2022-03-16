@@ -35,7 +35,7 @@ namespace FirstDemoPrj.Tests
             return result;
         }
 
-        protected virtual async Task UsingDbContextAsync(Func<FirstDemoPrjDbContext, Task> action)
+ /*       protected virtual async Task UsingDbContextAsync(Func<FirstDemoPrjDbContext, Task> action)
         {
             using (var context = LocalIocManager.Resolve<FirstDemoPrjDbContext>())
             {
@@ -43,7 +43,7 @@ namespace FirstDemoPrj.Tests
                 await context.SaveChangesAsync(true);
             }
         }
-
+ */
         protected virtual async Task<T> UsingDbContextAsync<T>(Func<FirstDemoPrjDbContext, Task<T>> func)
         {
             T result;
