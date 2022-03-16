@@ -2,6 +2,7 @@
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Abp.Domain.Entities.Auditing;
+using Abp.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,5 +31,27 @@ namespace FirstDemoPrj
     public interface ITaskAppService : IApplicationService
     {
         Task<ListResultDto<TaskListDto>> GetAll(GetAllTasksInput input);
+    }
+    public class TaskAppService : FirstDemoPrjAppServiceBase, ITaskAppService
+    {
+        private readonly IRepository<Task> _taskRepository;
+
+        public TaskAppService(IRepository<Task> taskRepository)
+        {
+            _taskRepository = taskRepository;
+        }
+
+        public async Task<ListResultDto<TaskListDto>> GetAll(GetAllTasksInput input)
+        {
+            var tasks = await _taskRepository
+                .GetAll()
+                .WhereIf(input.State.HasValue, t => t.State == input.State.Value)
+                .OrderByDescending(t => t.CreationTime)
+                .ToListAsync();
+
+            return new ListResultDto<TaskListDto>(
+                ObjectMapper.Map<List<TaskListDto>>(tasks)
+            );
+        }
     }
 }
