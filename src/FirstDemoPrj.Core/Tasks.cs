@@ -9,7 +9,7 @@ using Abp.Timing;
 namespace FirstDemoPrj
 {
     [Table("AppTasks")]
-    public class Task : Entity, IHasCreationTime
+    public class Tasks : Entity, IHasCreationTime
     {
         public const int MaxTitleLength = 256;
         public const int MaxDescriptionLength = 64 * 1024; //64KB
@@ -25,13 +25,13 @@ namespace FirstDemoPrj
 
         public TaskState State { get; set; }
 
-        public Task()
+        public Tasks()
         {
             CreationTime = Clock.Now;
             State = TaskState.Open;
         }
 
-        public Task(string title, string description = null)
+        public Tasks(string title, string description = null)
             : this()
         {
             Title = title;
