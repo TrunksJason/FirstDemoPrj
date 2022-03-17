@@ -1,37 +1,14 @@
-﻿using Abp.Application.Services;
-using Abp.Application.Services.Dto;
-using Abp.AutoMapper;
-using Abp.Domain.Entities.Auditing;
-using Abp.Domain.Repositories;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Abp.Application.Services.Dto;
+using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
+using FirstDemoPrj.Tasks.Dtos;
+using Microsoft.EntityFrameworkCore;
 
-namespace FirstDemoPrj
+namespace FirstDemoPrj.Tasks
 {
-
-    public class GetAllTasksInput
-    {
-        public TaskState? State { get; set; }
-    }
-
-    [AutoMapFrom(typeof(Task))]
-    public class TaskListDto : EntityDto, IHasCreationTime
-    {
-        public string Title { get; set; }
-
-        public string Description { get; set; }
-
-        public DateTime CreationTime { get; set; }
-
-        public TaskState State { get; set; }
-    }
-    public interface ITaskAppService : IApplicationService
-    {
-        Task<ListResultDto<TaskListDto>> GetAll(GetAllTasksInput input);
-    }
     public class TaskAppService : FirstDemoPrjAppServiceBase, ITaskAppService
     {
         private readonly IRepository<Task> _taskRepository;
@@ -45,6 +22,7 @@ namespace FirstDemoPrj
         {
             var tasks = await _taskRepository
                 .GetAll()
+                .Include(t => t.AssignedPerson)
                 .WhereIf(input.State.HasValue, t => t.State == input.State.Value)
                 .OrderByDescending(t => t.CreationTime)
                 .ToListAsync();
@@ -52,6 +30,12 @@ namespace FirstDemoPrj
             return new ListResultDto<TaskListDto>(
                 ObjectMapper.Map<List<TaskListDto>>(tasks)
             );
+        }
+
+        public async System.Threading.Tasks.Task Create(CreateTaskInput input)
+        {
+            var task = ObjectMapper.Map<Task>(input);
+            await _taskRepository.InsertAsync(task);
         }
     }
 }

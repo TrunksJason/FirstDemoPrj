@@ -8,7 +8,7 @@ namespace FirstDemoPrj.Web.Tests.Controllers
     public class HomeController_Tests: FirstDemoPrjWebTestBase
     {
         [Fact]
-        public async Task Index_Test()
+        public async System.Threading.Tasks.Task Index_Test()
         {
             //Act
             var response = await GetResponseAsStringAsync(

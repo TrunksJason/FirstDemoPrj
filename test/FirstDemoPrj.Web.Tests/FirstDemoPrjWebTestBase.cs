@@ -93,7 +93,7 @@ namespace FirstDemoPrj.Web.Tests
             return result;
         }
 
-        protected async Task UsingDbContextAsync(Func<FirstDemoPrjDbContext, Task> action)
+        protected async System.Threading.Tasks.Task UsingDbContextAsync(Func<FirstDemoPrjDbContext, System.Threading.Tasks.Task> action)
         {
             using (var context = IocManager.Resolve<FirstDemoPrjDbContext>())
             {
